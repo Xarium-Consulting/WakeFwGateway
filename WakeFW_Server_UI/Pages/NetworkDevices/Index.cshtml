@@ -1,0 +1,48 @@
+﻿@page
+@model WakeFW_Server_UI.Pages.NetworkDevices.IndexModel
+
+@{
+    ViewData["Title"] = "Manage saved devices";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Add new device</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TargetNetworkDevice[0].Ip)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TargetNetworkDevice[0].Mac)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TargetNetworkDevice[0].AddedDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.TargetNetworkDevice) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ip)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mac)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AddedDate)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
