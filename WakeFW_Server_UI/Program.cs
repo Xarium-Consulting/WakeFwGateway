@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 
 builder.Services.AddDbContext<WakeFW_Server_UIContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("WakeFW_Server_UIContext")));
+    options.UseSqlite(builder.Configuration.GetConnectionString("WakeFW_Server_UIContext")));
 
 var app = builder.Build();
 
