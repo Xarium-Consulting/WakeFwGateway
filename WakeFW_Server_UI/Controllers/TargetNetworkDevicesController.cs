@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WakeFW_Server_UI.Data;
 using WakeFW_Server_UI.Models;
+using System.Net;
+using System.Net.NetworkInformation;
 
 namespace WakeFW_Server_UI.Controllers
 {
@@ -58,7 +60,10 @@ namespace WakeFW_Server_UI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Ip,Mac,AddedDate")] TargetNetworkDevice targetNetworkDevice)
         {
-            if (ModelState.IsValid)
+            targetNetworkDevice.AddedDate = DateTime.Now;
+
+            ModelState.ClearValidationState(nameof(TargetNetworkDevice));
+            if (TryValidateModel(targetNetworkDevice, nameof(TargetNetworkDevice)))
             {
                 _context.Add(targetNetworkDevice);
                 await _context.SaveChangesAsync();
@@ -153,6 +158,26 @@ namespace WakeFW_Server_UI.Controllers
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult ValidateIpAddress(string ip)
+        {
+            IPAddress parsedIp;
+            if (!IPAddress.TryParse(ip, out parsedIp))
+            {
+                return Json("Invalid IP address");
+            }
+            return Json(true);
+        }
+
+        public IActionResult ValidateMacAddress(string mac)
+        {
+            PhysicalAddress parsedMac;
+            if(!PhysicalAddress.TryParse(mac , out parsedMac))
+            {
+                return Json("Invalid MAC address");
+            }
+            return Json(true);
         }
 
         private bool TargetNetworkDeviceExists(int id)
