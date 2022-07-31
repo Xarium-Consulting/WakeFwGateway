@@ -24,6 +24,13 @@ catch(Exception ex)
 
 var app = builder.Build();
 
+//Initialize DB 
+using (var serviceScope = app.Services.CreateScope())
+{
+    var context = serviceScope.ServiceProvider.GetRequiredService<WakeFW_Server_UIContext>();
+    context.Database.Migrate();
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
