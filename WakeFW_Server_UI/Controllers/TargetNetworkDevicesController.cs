@@ -180,7 +180,7 @@ namespace WakeFW_Server_UI.Controllers
             }
             return Json(true);
         }
-        public async Task<IActionResult> Wake(int id)
+        public async Task<IActionResult> Wake(int id , uint repetitions = 10)
         {
             if (_context.TargetNetworkDevice == null)
             {
@@ -189,7 +189,7 @@ namespace WakeFW_Server_UI.Controllers
             var target = await _context.TargetNetworkDevice.FindAsync(id);
             IPAddress targetAddress = WakeTarget.GetBroadcastAddress(IPAddress.Parse(target.Ip), IPAddress.Parse("255.255.255.255"));
             byte[] payload = WakeTarget.GeneratePayload(PhysicalAddress.Parse(target.Mac));
-            WakeDevice(targetAddress, payload, null, 1);
+            WakeDevice(targetAddress, payload, null, repetitions);
             return RedirectToAction(nameof(Index));
         }
 
