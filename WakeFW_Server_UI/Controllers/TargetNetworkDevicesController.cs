@@ -9,6 +9,7 @@ using WakeFW_Server_UI.Data;
 using WakeFW_Server_UI.Models;
 using System.Net;
 using System.Net.NetworkInformation;
+using static WakeFW_Server_UI.WakeTarget;
 
 namespace WakeFW_Server_UI.Controllers
 {
@@ -178,6 +179,18 @@ namespace WakeFW_Server_UI.Controllers
                 return Json("Invalid MAC address");
             }
             return Json(true);
+        }
+        public async Task<IActionResult> Wake(int id)
+        {
+            if (_context.TargetNetworkDevice == null)
+            {
+                return Problem("Entity set 'WakeFW_Server_UIContext.TargetNetworkDevice'  is null.");
+            }
+            var target = await _context.TargetNetworkDevice.FindAsync(id);
+            IPAddress targetAddress = WakeTarget.GetBroadcastAddress(IPAddress.Parse(target.Ip), IPAddress.Parse("255.255.255.255"));
+            byte[] payload = WakeTarget.GeneratePayload(PhysicalAddress.Parse(target.Mac));
+            WakeDevice(targetAddress, payload, null, 1);
+            return RedirectToAction(nameof(Index));
         }
 
         private bool TargetNetworkDeviceExists(int id)
