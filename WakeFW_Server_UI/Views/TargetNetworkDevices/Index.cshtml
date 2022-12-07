@@ -6,7 +6,13 @@
 }
 
 <h1>Devices</h1>
-
+@{
+    var Messages = ViewData["Messages"] as List<Notification>;
+    if(Messages != null && Messages.Count > 0)
+    {
+      await Html.RenderPartialAsync("_MessageBar", Messages);  
+    } 
+}
 <p>
     <a asp-action="Create">Add new device</a>
 </p>
