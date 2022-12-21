@@ -1,5 +1,8 @@
 ﻿@using WakeFW_Server_UI.Data.Enumeration;
 @model Notification
+<head>
+    <script language="JavaScript" type="text/javascript" src="/lib/jquery/dist/jquery.min.js"></script>
+</head>
 
 <div class="d-flex flex-column">
     
@@ -30,3 +33,12 @@
             break;
     }
 </div>
+<script type="text/javascript">
+    $(document).ready(function() 
+       {
+        setTimeout(function() 
+        {
+            $(".alert").alert('close');
+        }, 10000);
+});
+</script>

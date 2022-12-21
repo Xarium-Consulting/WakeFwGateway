@@ -22,6 +22,14 @@ namespace WakeFW_Server_UI.Controllers
         {
             _context = context;
         }
+        internal List<Notification> Messages
+        {
+            get
+            {
+                if (Messages != null) { return Messages; }
+                return new List<Notification>();
+            }
+        }
 
         // GET: TargetNetworkDevices
         public async Task<IActionResult> Index()
@@ -36,14 +44,18 @@ namespace WakeFW_Server_UI.Controllers
         {
             if (id == null || _context.TargetNetworkDevice == null)
             {
-                return NotFound();
+                Messages.Add(new Notification() { Message = $"Error loading device data", Type = NotificationType.failure });
+                ViewData["Messages"] = Messages;
+                return View("Index");
             }
 
             var targetNetworkDevice = await _context.TargetNetworkDevice
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (targetNetworkDevice == null)
             {
-                return NotFound();
+                Messages.Add(new Notification() { Message = $"No device found for specified id", Type = NotificationType.failure });
+                ViewData["Messages"] = Messages;
+                return View("Index");
             }
 
             return View(targetNetworkDevice);
@@ -83,16 +95,19 @@ namespace WakeFW_Server_UI.Controllers
             var Messages = new List<Notification>();
             if (id == null || _context.TargetNetworkDevice == null)
             {
-                return NotFound();
+                Messages.Add(new Notification() { Message = $"Error loading device data", Type = NotificationType.failure });
+                ViewData["Messages"] = Messages;
+                return View("Index");
             }
 
             var targetNetworkDevice = await _context.TargetNetworkDevice.FindAsync(id);
             if (targetNetworkDevice == null)
             {
-                return NotFound();
+                Messages.Add(new Notification() { Message = $"No device found for specified id", Type = NotificationType.failure });
+                ViewData["Messages"] = Messages;
+                return View("Index");
             }
-            Messages.Add(new Notification() { Message = $"Device {targetNetworkDevice.Mac} has been modified.", Type = NotificationType.success });
-            ViewData["Messages"] = Messages;
+
             return View(targetNetworkDevice);
         }
 
@@ -105,7 +120,9 @@ namespace WakeFW_Server_UI.Controllers
         {
             if (id != targetNetworkDevice.Id)
             {
-                return NotFound();
+                Messages.Add(new Notification() { Message = $"Error loading device data", Type = NotificationType.failure });
+                ViewData["Messages"] = Messages;
+                return View("Index");
             }
 
             if (ModelState.IsValid)
@@ -119,14 +136,18 @@ namespace WakeFW_Server_UI.Controllers
                 {
                     if (!TargetNetworkDeviceExists(targetNetworkDevice.Id))
                     {
-                        return NotFound();
+                        Messages.Add(new Notification() { Message = $"No device found for specified id", Type = NotificationType.failure });
+                        ViewData["Messages"] = Messages;
+                        return View("Index");
                     }
                     else
                     {
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                Messages.Add(new Notification() { Message = $"Device {targetNetworkDevice.Mac} has been modified.", Type = NotificationType.success });
+                ViewData["Messages"] = Messages;
+                return View("Index", await _context.TargetNetworkDevice.ToListAsync());
             }
             return View(targetNetworkDevice);
         }
@@ -136,14 +157,18 @@ namespace WakeFW_Server_UI.Controllers
         {
             if (id == null || _context.TargetNetworkDevice == null)
             {
-                return NotFound();
+                Messages.Add(new Notification() { Message = $"Error loading device data", Type = NotificationType.failure });
+                ViewData["Messages"] = Messages;
+                return View("Index");
             }
 
             var targetNetworkDevice = await _context.TargetNetworkDevice
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (targetNetworkDevice == null)
             {
-                return NotFound();
+                Messages.Add(new Notification() { Message = $"No device found for specified id", Type = NotificationType.failure });
+                ViewData["Messages"] = Messages;
+                return View("Index");
             }
 
             return View(targetNetworkDevice);

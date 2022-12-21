@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using WakeFW_Server_UI.Data;
 using NLog;
 using NLog.Web;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 var builder = WebApplication.CreateBuilder(args);
@@ -21,10 +22,15 @@ catch(Exception ex)
 {
     logger.Error($"Exception occured while adding SQLite to services. Exception message: \n {ex.Message}");
 }
+// Configure authentication services
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+        builder.Configuration.Bind("JwtSettings", options));
 
 var app = builder.Build();
 
-//Initialize DB 
+// Initialize DB 
 using (var serviceScope = app.Services.CreateScope())
 {
     var context = serviceScope.ServiceProvider.GetRequiredService<WakeFW_Server_UIContext>();
@@ -41,13 +47,10 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
 app.Run();
