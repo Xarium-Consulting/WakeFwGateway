@@ -1,0 +1,12 @@
+﻿@model List<Notification>
+
+<div class="d-flex flex-column" id="MessageBar">
+
+@{
+    foreach(var item in Model)
+    {
+        await Html.RenderPartialAsync("_Notification", item);
+    }   
+}
+
+</div>

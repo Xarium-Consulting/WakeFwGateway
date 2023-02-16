@@ -44,9 +44,6 @@ namespace WakeFW_Server_UI
                     // Send data to destination host
                     s.SendTo(payload , EP);
                 }
-
-                Console.WriteLine();
-                Console.WriteLine($"Magic packets ({repetitions}) sent to: {EP.Address.ToString}:{port}");
             }
             s.Dispose();
         }

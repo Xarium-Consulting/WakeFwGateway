@@ -1,0 +1,29 @@
+﻿
+<div>
+    <h3>This is a  test login page</h3>
+</div>
+@if (Context.Request.HttpContext.User.Identity.IsAuthenticated)
+{
+    <div>
+        <p>
+            User is already logged in.
+        </p>
+    </div>
+}
+else
+{
+    <div>
+        <p>
+            Log in using email.
+        </p>
+    </div>
+    <div class="login">
+        <form method="post" action="Account/Login">
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="Email" placeholder="example@mail.com" required />
+            <button type="submit">
+                Login
+            </button>
+        </form>
+    </div>
+}
