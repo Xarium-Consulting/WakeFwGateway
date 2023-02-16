@@ -11,24 +11,18 @@ using System.Net;
 using System.Net.NetworkInformation;
 using static WakeFW_Server_UI.WakeTarget;
 using WakeFW_Server_UI.Data.Enumeration;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace WakeFW_Server_UI.Controllers
 {
     public class TargetNetworkDevicesController : Controller
     {
         private readonly WakeFW_Server_UIContext _context;
+        private List<Notification> _messages = new();
 
         public TargetNetworkDevicesController(WakeFW_Server_UIContext context)
         {
             _context = context;
-        }
-        internal List<Notification> Messages
-        {
-            get
-            {
-                if (Messages != null) { return Messages; }
-                return new List<Notification>();
-            }
         }
 
         // GET: TargetNetworkDevices
@@ -119,6 +113,11 @@ namespace WakeFW_Server_UI.Controllers
 
             if (ModelState.IsValid)
             {
+                if (!TargetNetworkDeviceExists(targetNetworkDevice.Id))
+                {
+                    AddNotification($"No device found for specified id", NotificationType.failure);
+                    return View("Index");
+                }
                 try
                 {
                     _context.Update(targetNetworkDevice);
@@ -126,16 +125,15 @@ namespace WakeFW_Server_UI.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TargetNetworkDeviceExists(targetNetworkDevice.Id))
-                    {
-                        AddNotification($"No device found for specified id", NotificationType.failure);
-                        return View("Index");
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    AddNotification("Failed to edit device" , NotificationType.failure);
+                    return View("Index");
                 }
+                catch (Exception)
+                {
+                    AddNotification("Failed to edit device, unknown exception occured", NotificationType.failure);
+                    return View("Index");
+                }
+
                 AddNotification($"Device {targetNetworkDevice.Mac} has been modified.", NotificationType.success);
                 return View("Index", await _context.TargetNetworkDevice.ToListAsync());
             }
@@ -232,8 +230,8 @@ namespace WakeFW_Server_UI.Controllers
                 Message = message,
                 Type = type
             };
-            Messages.Add(notification);
-            ViewData["Messages"] = Messages;
+            _messages.Add(notification);
+            ViewData["Messages"] = _messages;
         }
     }
 }
