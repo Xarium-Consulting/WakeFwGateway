@@ -1,0 +1,43 @@
+﻿@using WakeFwGateway.Data.Enumeration;
+@model Notification
+<head>
+    <script language="JavaScript" type="text/javascript" src="/lib/jquery/dist/jquery.min.js"></script>
+</head>
+
+<div class="d-flex flex-column">
+
+    @switch (Model.Type)
+    {
+        case NotificationType.neutral:
+            <div class="alert alert-primary" role="alert">
+                @Model.Message
+            </div>
+            break;
+
+        case NotificationType.success:
+            <div class="alert alert-success" role="alert">
+                Success: @Model.Message
+            </div>
+            break;
+
+        case NotificationType.failure:
+            <div class="alert alert-danger" role="alert">
+                Failure: @Model.Message
+            </div>
+            break;
+
+        case NotificationType.warning:
+            <div class="alert alert-warning" role="alert">
+                Warning: @Model.Message
+            </div>
+            break;
+    }
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        setTimeout(function() {
+            $(".alert").alert('close');
+        }, 10000);
+    });
+</script>
