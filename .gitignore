@@ -351,5 +351,8 @@ MigrationBackup/
 .vscode/
 
 # Configuration files
-appsettings.json
-appsettings/*.json
+# appsettings.json
+# appsettings/*.json
+
+# Databases
+Databases
