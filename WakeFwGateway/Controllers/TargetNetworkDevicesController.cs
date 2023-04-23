@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using WakeFwGateway.Data;
-using WakeFwGateway.Models;
 using System.Net;
 using System.Net.NetworkInformation;
-using static WakeFwGateway.WakeTarget;
+using WakeFwGateway.Data;
 using WakeFwGateway.Data.Enumeration;
-using Microsoft.AspNetCore.Mvc.Filters;
+using WakeFwGateway.Models;
+using static WakeFwGateway.WakeTarget;
 
 namespace WakeFwGateway.Controllers
 {
+    [Authorize]
     public class TargetNetworkDevicesController : Controller
     {
         private readonly WakeFwGatewayContext _context;

@@ -13,6 +13,7 @@ builder.Services.AddAuthentication(options =>
 {
     options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = "GitHub";
 })
 .AddCookie(options =>
 {
@@ -27,7 +28,7 @@ builder.Services.AddAuthentication(options =>
     options.UserInformationEndpoint = "https://api.github.com/user";
     options.ClientId = builder.Configuration["GitHub:ClientId"];
     options.ClientSecret = builder.Configuration["GitHub:ClientSecret"];
-    options.CallbackPath = new PathString("/signin-github");
+    options.CallbackPath = new PathString("/Account/Signin-GitHub");
     options.ClaimsIssuer = "OAuth2-Github";
     options.SaveTokens = true;
 
